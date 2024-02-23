@@ -1,56 +1,68 @@
-const taskScheduler={
-tasks:[],
+// Define the TaskScheduler object
+const TaskScheduler = {
+    tasks: [],
 
+    // Function to add a task to the scheduler
+    addTask: function(title, description, dueDate) {
+        const task = {
+            title: title,
+            description: description,
+            dueDate: new Date(dueDate),
+            completed: false
+        };
+        this.tasks.push(task);
+        console.log(`Task "${title}" added to the scheduler.`);
+    },
 
-addNewTask: function(title,description,deuDate,completed){
-    const task={
-        title:title,
-        addDescription:description,
-        addDeuDate:deuDate,
-        addCompleted:completed
- }
- this.tasks.push(task);
- console.log("Your task was added successfuly\n\n");
-},
+    // Function to display tasks sorted by their due dates
+    displayTasksSortedByDueDate: function() {
+        const sortedTasks = this.tasks.slice().sort((a, b) => a.dueDate - b.dueDate);
+        console.log("Tasks Sorted by Due Date:");
+        sortedTasks.forEach(task => {
+            console.log(`- ${task.title} (Due Date: ${task.dueDate.toDateString()}, Completed: ${task.completed ? 'Yes' : 'No'})`);
+        });
+    },
 
-
-displayTasks:function(){
-
-    if(this.addNewTask===0){
-        console.log("No task added ! try to add a new one\n\n");
-        return;
-    }
-
-    const sortTasks=this.tasks.sort((a,b)=> new Date(a.addDeuDate)- new Date(b.addDeuDate));
-    console.log(sortTasks);
-     
-    
-},
-
-
-updateTask: function(title,description2,deuDate2,completed2){
-    const index = this.tasks.findIndex(task => title==title);
-        if (index!==1) {
-            
+    // Function to update task details or mark tasks as completed
+    updateTask: function(title, newTitle, newDescription, newDueDate, completed) {
+        const task = this.tasks.find(task => task.title === title);
+        if (task) {
+            task.title = newTitle || task.title;
+            task.description = newDescription || task.description;
+            task.dueDate = newDueDate ? new Date(newDueDate) : task.dueDate;
+            if (completed !== undefined) {
+                task.completed = completed;
+            }
+            console.log(`Task "${title}" updated successfully.`);
+        } else {
+            console.log(`Task "${title}" not found.`);
         }
-                      
-},
+    },
 
-removeTaskFromScheduler: function(title){
-    const deleteTask=this.tasks.findIndex(name=>name.title===title);
-    if(deleteTask!==-1){
-        this.tasks.splice(deleteTask,1);
-        console.log("task was deleted successfuly    "+deleteTask);
+    // Function to remove a task from the scheduler
+    removeTask: function(title) {
+        const index = this.tasks.findIndex(task => task.title === title);
+        if (index !== -1) {
+            this.tasks.splice(index, 1);
+            console.log(`Task "${title}" removed from the scheduler.`);
+        } else {
+            console.log(`Task "${title}" not found.`);
+        }
     }
-    else{
-        console.log("task not found");
-    }
-}
-}
-taskScheduler.addNewTask("Revision","keep revising well about arrays and object","2024-02-18",true);
-taskScheduler.addNewTask("Sport","Keep having good shape","2023-01-19",false);
-taskScheduler.addNewTask("Eat","for being under the weather","2022-07-20",true);
+};
 
-taskScheduler.updateTask("nhjjj","hyhuj","2025-08-21",false);
-taskScheduler.removeTaskFromScheduler("Revision");
-taskScheduler.displayTasks();
+// Example usage:
+TaskScheduler.addTask("Complete project", "Finish the project report", "2024-02-29");
+TaskScheduler.addTask("Go grocery shopping", "Buy vegetables and fruits", "2024-02-25");
+TaskScheduler.addTask("Call mom", "Wish her birthday", "2024-03-01");
+
+TaskScheduler.displayTasksSortedByDueDate();
+
+TaskScheduler.updateTask("Complete project", undefined, "Finalize presentation slides", "2024-02-28");
+TaskScheduler.updateTask("Go grocery shopping", undefined, undefined, "2024-02-26", true);
+
+TaskScheduler.displayTasksSortedByDueDate();
+
+TaskScheduler.removeTask("Call dad");
+
+TaskScheduler.displayTasksSortedByDueDate();
